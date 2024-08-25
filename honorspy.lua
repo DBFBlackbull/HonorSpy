@@ -18,6 +18,7 @@ HonorSpy:SetCommPrefix(commPrefix)
 local VERSION = 3;
 local paused = false; -- pause all inspections when user opens inspect frame
 local playerName = UnitName("player");
+local playerFaction = UnitFactionGroup("player");
 
 local RealmPlayersAddon = false;
 if (type(VF_InspectDone) ~= "nil" and type(VF_StartInspectingTarget) ~= "nil") then
@@ -42,6 +43,7 @@ local inspectedPlayerName = nil; -- name of currently inspected player
 
 local function StartInspecting(unitID)
 	local name = UnitName(unitID);
+	local faction = UnitFactionGroup(unitID);
 
 	if (name ~= inspectedPlayerName) then -- changed target, clear currently inspected player
 		ClearInspectPlayer();
@@ -51,6 +53,7 @@ local function StartInspecting(unitID)
 		or name == inspectedPlayerName
 		or not UnitIsPlayer(unitID)
 		or not UnitIsFriend("player", unitID)
+		or not playerFaction == faction -- filter players on cross faction private servers
 		or not CheckInteractDistance(unitID, 1)
 		or not CanInspect(unitID)) then
 		return
