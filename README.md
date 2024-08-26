@@ -30,3 +30,7 @@ P.S. Do not be afraid of losing all your data, very likely that another players 
 ### Screenshot
 
 ![HonorSpy Screenshot](https://habrastorage.org/files/31b/e92/f9e/31be92f9eb044a53b4eb642d0ca43bbc.png)
+
+### Fork Changes
+
+* No longer adds players from opposite faction on cross-realm servers 
