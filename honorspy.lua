@@ -18,7 +18,7 @@ HonorSpy:SetCommPrefix(commPrefix)
 local VERSION = 3;
 local paused = false; -- pause all inspections when user opens inspect frame
 local playerName = UnitName("player");
-local playerFaction = UnitFactionGroup("player");
+local playerFaction = nil -- set after PLAYER_ENTERING_WORLD event is fired.
 local factionTable = {
 	["Orc"] = "Horde",
 	["Undead"] = "Horde", -- Localised
@@ -44,6 +44,7 @@ function HonorSpy:OnEnable()
 	-- self:RegisterComm(commPrefix, "CUSTOM", "HS", "OnCommReceiveCustom")
 	self:RegisterEvent("PLAYER_DEAD");
 	self:RegisterEvent("PLAYER_TARGET_CHANGED");
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
 	self:RegisterEvent("UPDATE_MOUSEOVER_UNIT");
 	self:RegisterEvent("INSPECT_HONOR_UPDATE");
 	self.OnMenuRequest = BuildMenu();
@@ -424,4 +425,8 @@ function HonorSpy:PLAYER_DEAD()
 		self:SendCommMessage("GUILD", false, false, filtered_players);
 		-- self:SendCommMessage("CUSTOM", "HS", false, false, filtered_players);
 	end
+end
+
+function HonorSpy:PLAYER_DEAD()
+	playerFaction = UnitFactionGroup("player");
 end
