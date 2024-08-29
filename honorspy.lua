@@ -427,6 +427,6 @@ function HonorSpy:PLAYER_DEAD()
 	end
 end
 
-function HonorSpy:PLAYER_DEAD()
+function HonorSpy:PLAYER_ENTERING_WORLD()
 	playerFaction = UnitFactionGroup("player");
 end
