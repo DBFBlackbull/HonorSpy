@@ -6,6 +6,10 @@ Since blizzard reworked the ranking system in classic ERA, your progress is unre
 This makes honorspy purposeless and outdated, which results in the end of dev and maintenance for this addon.
 You should probably uninstall it as it will cause error and problems sooner or later.
 
+### For Private Vanilla 1.12 servers
+
+Use [vanilla](https://github.com/kakysha/HonorSpy/tree/vanilla) branch instead
+
 ### Description
 
 Addon helps players estimate their PvP next week rank and overall progress.
