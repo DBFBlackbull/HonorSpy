@@ -47,8 +47,8 @@ end
 
 function HonorSpyStandings:BuildStandingsTable()
   local t = { }
-  for playerName, player in pairs(HonorSpy.db.realm.hs.currentStandings) do
-    table.insert(t, {playerName, player.class, player.thisWeekHonor, player.lastWeekHonor, player.standing, player.RP, player.rank, player.last_checked})
+  for playerName, player in pairs(HonorSpy.db.realm.hs. currentStandings) do
+    table.insert(t, {playerName, player.class, player.thisWeekHonor, player.lastWeekHonor, player.standing, player.RP, player.rank, player.last_checked, player.faction})
   end
   local sort_column = 3; -- ThisWeekHonor
   if (HonorSpy.db.realm.hs.sort == L["Rank"]) then sort_column = 6; end
@@ -68,42 +68,51 @@ function HonorSpyStandings:OnTooltipUpdate()
 	  "text5", C:Orange(L["RP"]),     "child_text5R",   1, "child_text5G",   1, "child_text5B",   0, "child_justify5", "RIGHT",
 	  "text6", C:Orange(L["Rank"]),     "child_text6R",   1, "child_text6G",   0, "child_text6B",   0, "child_justify6", "RIGHT"
 	)
+
+	local _, race = UnitRace("player");
+	local playerFaction = HonorSpy.FactionTable[race]
+
+	local lineAdded = 0
+
 	local t = self:BuildStandingsTable()
 	for i = 1, table.getn(t) do
-		local name, class, thisWeekHonor, lastWeekHonor, standing, RP, rank, last_checked = unpack(t[i])
+		local name, class, thisWeekHonor, lastWeekHonor, standing, RP, rank, last_checked, faction = unpack(t[i])
+		if playerFaction == faction then
+			local last_seen, last_seen_human = (time() - last_checked), ""
+			if (last_seen/60/60/24 > 1) then
+				last_seen_human = ""..math.floor(last_seen/60/60/24)..L["d"]
+			elseif (last_seen/60/60 > 1) then
+				last_seen_human = ""..math.floor(last_seen/60/60)..L["h"]
+			elseif (last_seen/60 > 1) then
+				last_seen_human = ""..math.floor(last_seen/60)..L["m"]
+			else
+				last_seen_human = ""..last_seen..L["s"]
+			end
 
-		local last_seen, last_seen_human = (time() - last_checked), ""
-		if (last_seen/60/60/24 > 1) then
-			last_seen_human = ""..math.floor(last_seen/60/60/24)..L["d"]
-		elseif (last_seen/60/60 > 1) then
-			last_seen_human = ""..math.floor(last_seen/60/60)..L["h"]
-		elseif (last_seen/60 > 1) then
-			last_seen_human = ""..math.floor(last_seen/60)..L["m"]
-		else
-			last_seen_human = ""..last_seen..L["s"]
+			local class_color = BC:GetHexColor(class)
+
+			cat:AddLine(
+					"text", C:Colorize("444444", i).." "..C:Colorize(class_color, name),
+					"text2", C:Colorize(class_color, string.format("%d", thisWeekHonor)),
+					"text3", C:Colorize(class_color, string.format("%d", lastWeekHonor)),
+					"text4", C:Colorize(class_color, string.format("%d", standing)),
+					"text5", C:Colorize(class_color, string.format("%d", RP)),
+					"text6", C:Colorize(class_color, string.format("%d", rank)),
+					"func", function() end,
+					"onEnterFunc", function()
+						GameTooltip:SetOwner(this, "ANCHOR_CURSOR")
+						GameTooltip:AddLine(last_seen_human, 1, 1, 1)
+						GameTooltip:Show()
+					end,
+					"onLeaveFunc", function()
+						GameTooltip:Hide()
+					end
+			)
+			lineAdded = lineAdded + 1
 		end
 
-		local class_color = BC:GetHexColor(class)
-
-		cat:AddLine(
-			"text", C:Colorize("444444", i).." "..C:Colorize(class_color, name),
-			"text2", C:Colorize(class_color, string.format("%d", thisWeekHonor)),
-			"text3", C:Colorize(class_color, string.format("%d", lastWeekHonor)),
-			"text4", C:Colorize(class_color, string.format("%d", standing)),
-			"text5", C:Colorize(class_color, string.format("%d", RP)),
-			"text6", C:Colorize(class_color, string.format("%d", rank)),
-			"func", function() end,
-			"onEnterFunc", function()
-				GameTooltip:SetOwner(this, "ANCHOR_CURSOR")
-				GameTooltip:AddLine(last_seen_human, 1, 1, 1)
-				GameTooltip:Show()
-			end,
-			"onLeaveFunc", function()
-				GameTooltip:Hide()
-			end
-		)
-
-		if (tonumber(HonorSpy.db.realm.hs.limit) > 0 and i == tonumber(HonorSpy.db.realm.hs.limit)) then
+		local limit = tonumber(HonorSpy.db.realm.hs.limit)
+		if (limit > 0 and lineAdded == limit) then
 			break
 		end
 	end
