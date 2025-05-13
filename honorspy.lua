@@ -239,8 +239,8 @@ function HonorSpy:Report(playerOfInterest)
 	local pool_size = 0;
 	local standing = -1;
 	local t = HonorSpyStandings:BuildStandingsTable()
-	local avg_lastcheck = 0;
-	pool_size = table.getn(t)
+	local avg_lastchecked = 0;
+	pool_size = table.getn(t);
 	for i = 1, table.getn(t) do
 		if (playerOfInterest == t[i][1]) then
 			standing = i
@@ -250,7 +250,6 @@ function HonorSpy:Report(playerOfInterest)
 		self:Print(string.format(L["Player %s not found in table"], playerOfInterest));
 		return
 	end;
-
 			  -- 1   2     3      4		 5		 6		7		8		9	10		11		12		13	14
 	local brk = {1, 0.858, 0.715, 0.587, 0.477, 0.377, 0.287, 0.207, 0.137, 0.077, 0.037, 0.017, 0.007, 0.002} -- brackets percentage
 	local RP  = {0, 400} -- RP for each bracket
