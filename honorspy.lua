@@ -236,8 +236,11 @@ function HonorSpy:Report(playerOfInterest)
 	end
 	playerOfInterest = string.upper(string.sub(playerOfInterest, 1, 1))..string.lower(string.sub(playerOfInterest, 2))
 
+	local pool_size = 0;
 	local standing = -1;
 	local t = HonorSpyStandings:BuildStandingsTable()
+	local avg_lastcheck = 0;
+	pool_size = table.getn(t)
 	for i = 1, table.getn(t) do
 		if (playerOfInterest == t[i][1]) then
 			standing = i
@@ -247,15 +250,6 @@ function HonorSpy:Report(playerOfInterest)
 		self:Print(string.format(L["Player %s not found in table"], playerOfInterest));
 		return
 	end;
-
-	local playerObjOfInterest = HonorSpy.db.realm.hs.currentStandings[playerOfInterest]
-
-	local pool_size = 0;
-	for _, player in ipairs(t) do
-		if player.faction == playerObjOfInterest.faction then
-			pool_size = pool_size + 1
-		end
-	end
 
 			  -- 1   2     3      4		 5		 6		7		8		9	10		11		12		13	14
 	local brk = {1, 0.858, 0.715, 0.587, 0.477, 0.377, 0.287, 0.207, 0.137, 0.077, 0.037, 0.017, 0.007, 0.002} -- brackets percentage
@@ -278,11 +272,11 @@ function HonorSpy:Report(playerOfInterest)
 		Ranks[i] = (i-2) * 5000;
 	end
 	local award = RP[my_bracket] + 1000 * inside_br_progress;
-	local RP = playerObjOfInterest.RP;
+	local RP = HonorSpy.db.realm.hs.currentStandings[playerOfInterest].RP;
 	local EstRP = math.floor(RP*0.8+award+.5);
-	local Rank = playerObjOfInterest.rank;
+	local Rank = HonorSpy.db.realm.hs.currentStandings[playerOfInterest].rank;
 	local EstRank = 14;
-	local Progress = math.floor(playerObjOfInterest.rankProgress*100);
+	local Progress = math.floor(HonorSpy.db.realm.hs.currentStandings[playerOfInterest].rankProgress*100);
 	local EstProgress = math.floor((EstRP - math.floor(EstRP/5000)*5000) / 5000*100);
 	for i = 3,14 do
 		if (EstRP < Ranks[i]) then
@@ -294,7 +288,7 @@ function HonorSpy:Report(playerOfInterest)
 	if (playerOfInterest ~= playerName) then
 		SendChatMessage("- HonorSpy v"..tostring(VERSION)..": "..L["Report for player"].." "..playerOfInterest,"emote")
 	end
-	SendChatMessage("- HonorSpy v"..tostring(VERSION)..": "..playerObjOfInterest.faction.." "..L["Pool Size"].." = "..pool_size..", "..L["Standing"].." = "..standing..",  "..L["Bracket"].." = "..my_bracket..",  "..L["current RP"].." = "..RP..",  "..L["Next Week RP"].." = "..EstRP,"emote")
+	SendChatMessage("- HonorSpy v"..tostring(VERSION)..": ".." "..L["Pool Size"].." = "..pool_size..", "..L["Standing"].." = "..standing..",  "..L["Bracket"].." = "..my_bracket..",  "..L["current RP"].." = "..RP..",  "..L["Next Week RP"].." = "..EstRP,"emote")
 	SendChatMessage("- HonorSpy v"..tostring(VERSION)..": "..L["Current Rank"].." = "..Rank.." ("..Progress.."%), "..L["Next Week Rank"].." = "..EstRank.." ("..EstProgress.."%)", "emote")
 end
 
