@@ -46,9 +46,13 @@ function HonorSpyStandings:Toggle()
 end
 
 function HonorSpyStandings:BuildStandingsTable()
+  local faction = UnitFactionGroup("player");
+
   local t = { }
   for playerName, player in pairs(HonorSpy.db.realm.hs. currentStandings) do
-    table.insert(t, {playerName, player.class, player.thisWeekHonor, player.lastWeekHonor, player.standing, player.RP, player.rank, player.last_checked, player.faction})
+    if player.faction == faction then
+      table.insert(t, {playerName, player.class, player.thisWeekHonor, player.lastWeekHonor, player.standing, player.RP, player.rank, player.last_checked, player.faction})
+    end
   end
   local sort_column = 3; -- ThisWeekHonor
   if (HonorSpy.db.realm.hs.sort == L["Rank"]) then sort_column = 6; end
