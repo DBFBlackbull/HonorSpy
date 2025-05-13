@@ -72,10 +72,10 @@ function HonorSpyStandings:OnTooltipUpdate()
 	  "text5", C:Orange(L["RP"]),     "child_text5R",   1, "child_text5G",   1, "child_text5B",   0, "child_justify5", "RIGHT",
 	  "text6", C:Orange(L["Rank"]),     "child_text6R",   1, "child_text6G",   0, "child_text6B",   0, "child_justify6", "RIGHT"
 	)
-
 	local t = self:BuildStandingsTable()
 	for i = 1, table.getn(t) do
 		local name, class, thisWeekHonor, lastWeekHonor, standing, RP, rank, last_checked = unpack(t[i])
+
 		local last_seen, last_seen_human = (time() - last_checked), ""
 		if (last_seen/60/60/24 > 1) then
 			last_seen_human = ""..math.floor(last_seen/60/60/24)..L["d"]

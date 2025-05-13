@@ -382,9 +382,7 @@ function store_player(playerName, player)
 	local player = table.copy(player);
 	local localPlayer = HonorSpy.db.realm.hs.currentStandings[playerName];
 	if (localPlayer == nil or localPlayer.last_checked < player.last_checked) then
-		if player.faction then -- only store players with a faction
-			HonorSpy.db.realm.hs.currentStandings[playerName] = player;
-		end
+		HonorSpy.db.realm.hs.currentStandings[playerName] = player;
 	end
 end
 
