@@ -75,7 +75,7 @@ function HonorSpyStandings:OnTooltipUpdate()
 
 	local t = self:BuildStandingsTable()
 	for i = 1, table.getn(t) do
-		local name, class, thisWeekHonor, lastWeekHonor, standing, RP, rank, last_checked, faction = unpack(t[i])
+		local name, class, thisWeekHonor, lastWeekHonor, standing, RP, rank, last_checked = unpack(t[i])
 		local last_seen, last_seen_human = (time() - last_checked), ""
 		if (last_seen/60/60/24 > 1) then
 			last_seen_human = ""..math.floor(last_seen/60/60/24)..L["d"]
@@ -90,21 +90,21 @@ function HonorSpyStandings:OnTooltipUpdate()
 		local class_color = BC:GetHexColor(class)
 
 		cat:AddLine(
-				"text", C:Colorize("444444", i).." "..C:Colorize(class_color, name),
-				"text2", C:Colorize(class_color, string.format("%d", thisWeekHonor)),
-				"text3", C:Colorize(class_color, string.format("%d", lastWeekHonor)),
-				"text4", C:Colorize(class_color, string.format("%d", standing)),
-				"text5", C:Colorize(class_color, string.format("%d", RP)),
-				"text6", C:Colorize(class_color, string.format("%d", rank)),
-				"func", function() end,
-				"onEnterFunc", function()
-					GameTooltip:SetOwner(this, "ANCHOR_CURSOR")
-					GameTooltip:AddLine(last_seen_human, 1, 1, 1)
-					GameTooltip:Show()
-				end,
-				"onLeaveFunc", function()
-					GameTooltip:Hide()
-				end
+			"text", C:Colorize("444444", i).." "..C:Colorize(class_color, name),
+			"text2", C:Colorize(class_color, string.format("%d", thisWeekHonor)),
+			"text3", C:Colorize(class_color, string.format("%d", lastWeekHonor)),
+			"text4", C:Colorize(class_color, string.format("%d", standing)),
+			"text5", C:Colorize(class_color, string.format("%d", RP)),
+			"text6", C:Colorize(class_color, string.format("%d", rank)),
+			"func", function() end,
+			"onEnterFunc", function()
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR")
+				GameTooltip:AddLine(last_seen_human, 1, 1, 1)
+				GameTooltip:Show()
+			end,
+			"onLeaveFunc", function()
+				GameTooltip:Hide()
+			end
 		)
 
 		if (tonumber(HonorSpy.db.realm.hs.limit) > 0 and i == tonumber(HonorSpy.db.realm.hs.limit)) then
